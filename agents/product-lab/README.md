@@ -1,3 +1,18 @@
+---
+type: agent
+id: product-lab
+name: 프로덕트 랩
+phase: do
+team:
+  - { role: 프로덕션 매니저, skill: techpack }
+  - { role: 프로덕션 매니저, skill: costing-ve }
+  - { role: 프로덕션 매니저, skill: qr-process }
+skills:
+  - skills/product/techpack.md
+  - skills/product/costing-ve.md
+  - skills/product/qr-process.md
+---
+
 # 프로덕트 랩 (Product Lab Agency)
 
 > "디자인을 실제 상품으로 만드는 기술 집단"

@@ -1,3 +1,18 @@
+---
+type: agent
+id: creative-studio
+name: 크리에이티브 스튜디오
+phase: design
+team:
+  - { role: 크리에이티브 디렉터, skill: moodboard }
+  - { role: 패션 디자이너, skill: design-spec }
+  - { role: 아트 디렉터, skill: visual-generation }
+skills:
+  - skills/creative/moodboard.md
+  - skills/creative/design-spec.md
+  - skills/creative/visual-generation.md
+---
+
 # 크리에이티브 스튜디오 (Creative Studio Agency)
 
 > "브랜드의 감성을 시각화하는 아티스트 집단"

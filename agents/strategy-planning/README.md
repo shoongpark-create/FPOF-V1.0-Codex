@@ -1,3 +1,20 @@
+---
+type: agent
+id: strategy-planning
+name: 전략기획실
+phase: plan
+team:
+  - { role: 시장 리서처, skill: trend-research }
+  - { role: 브랜드 전략가, skill: brand-strategy }
+  - { role: 수석 MD, skill: md-planning }
+  - { role: 컬렉션 플래너, skill: line-sheet }
+skills:
+  - skills/strategy/trend-research.md
+  - skills/strategy/brand-strategy.md
+  - skills/strategy/md-planning.md
+  - skills/strategy/line-sheet.md
+---
+
 # 전략기획실 (Strategy Planning Agency)
 
 > "시즌의 방향을 잡는 두뇌 집단"

@@ -1,3 +1,16 @@
+---
+type: agent
+id: data-intelligence
+name: 데이터 인텔리전스
+phase: check
+team:
+  - { role: 트렌드 애널리스트, skill: sales-analysis }
+  - { role: 인사이트 아키텍트, skill: insight-archiving }
+skills:
+  - skills/data/sales-analysis.md
+  - skills/data/insight-archiving.md
+---
+
 # 데이터 인텔리전스 (Data Intelligence Agency)
 
 > "숫자로 말하고, 경험에서 배우고, 지식으로 남기는 분석 집단"

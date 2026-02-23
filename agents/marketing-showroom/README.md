@@ -1,3 +1,20 @@
+---
+type: agent
+id: marketing-showroom
+name: 마케팅 쇼룸
+phase: do
+team:
+  - { role: 마케팅 디렉터, skill: imc-strategy }
+  - { role: 콘텐츠 디렉터, skill: visual-content }
+  - { role: 패션 에디터, skill: copywriting }
+  - { role: 소셜 전략 디렉터, skill: social-viral }
+skills:
+  - skills/marketing/imc-strategy.md
+  - skills/marketing/visual-content.md
+  - skills/marketing/copywriting.md
+  - skills/marketing/social-viral.md
+---
+
 # 마케팅 쇼룸 (Marketing Showroom Agency)
 
 > "브랜드 스토리를 세상에 전달하는 커뮤니케이션 집단"

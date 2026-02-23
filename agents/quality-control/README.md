@@ -1,3 +1,20 @@
+---
+type: agent
+id: quality-control
+name: QC 본부
+phase: all
+team:
+  - { role: 품질 검증관, skill: quality-gate }
+  - { role: 갭 디텍터, skill: gap-analysis }
+  - { role: 리포트 제너레이터, skill: completion-report }
+  - { role: PDCA 이터레이터, skill: pdca-iteration }
+skills:
+  - skills/quality/quality-gate.md
+  - skills/quality/gap-analysis.md
+  - skills/quality/completion-report.md
+  - skills/quality/pdca-iteration.md
+---
+
 # QC 본부 (Quality Control HQ)
 
 > "모든 산출물의 품질을 보장하는 검수 집단" — 하우스 직속

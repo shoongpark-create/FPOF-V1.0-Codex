@@ -35,14 +35,14 @@
 ## 패션 하우스 에이전시 (agents/)
 실무자의 자연어 요청을 해석하여 적합한 에이전시와 담당자가 작업합니다.
 
-| 에이전시 | 담당 | 매뉴얼 | 스킬 |
-|----------|------|--------|------|
-| **전략기획실** | 시즌 기획, 트렌드, MD 전략 | `agents/strategy-planning/` | `skills/strategy/season-planning.md` |
-| **크리에이티브 스튜디오** | 무드보드, 디자인, 비주얼 | `agents/creative-studio/` | `skills/creative/design-development.md` |
-| **프로덕트 랩** | 테크팩, 원가, QC | `agents/product-lab/` | `skills/product/techpack-production.md` |
-| **마케팅 쇼룸** | IMC, 화보/영상, 카피, 바이럴 | `agents/marketing-showroom/` | `skills/marketing/campaign-content.md` |
-| **데이터 인텔리전스** | 매출 분석, 인사이트, 지식 아카이빙 | `agents/data-intelligence/` | `skills/data/analysis-insight.md` |
-| **QC 본부** | 품질 검증, 갭 분석 | `agents/quality-control/` | `skills/quality/quality-gate.md` |
+| 에이전시 | 팀원 (역할 → 스킬) |
+|----------|-------------------|
+| **전략기획실** | 시장 리서처 → `trend-research` · 브랜드 전략가 → `brand-strategy` · 수석 MD → `md-planning` · 컬렉션 플래너 → `line-sheet` |
+| **크리에이티브 스튜디오** | 크리에이티브 디렉터 → `moodboard` · 패션 디자이너 → `design-spec` · 아트 디렉터 → `visual-generation` |
+| **프로덕트 랩** | 프로덕션 매니저 → `techpack` · `costing-ve` · `qr-process` |
+| **마케팅 쇼룸** | 마케팅 디렉터 → `imc-strategy` · 콘텐츠 디렉터 → `visual-content` · 패션 에디터 → `copywriting` · 소셜 전략 디렉터 → `social-viral` |
+| **데이터 인텔리전스** | 트렌드 애널리스트 → `sales-analysis` · 인사이트 아키텍트 → `insight-archiving` |
+| **QC 본부** | 품질 검증관 → `quality-gate` · 갭 디텍터 → `gap-analysis` · 리포트 제너레이터 → `completion-report` · PDCA 이터레이터 → `pdca-iteration` |
 
 ## 자연어 → 에이전시 라우팅
 요청의 키워드와 의도를 파악하여 적합한 에이전시를 호출합니다.
@@ -63,13 +63,13 @@
 ## 시즌 사이클 (PDCA)
 현재 시즌의 단계를 `.fpof-state.json` → `pdca.current_phase`에서 확인.
 
-| 단계 | 에이전시 | 하는 일 | 스킬 |
-|------|---------|---------|------|
-| **Plan** | 전략기획실 | 트렌드, 시즌 컨셉, MD 전략, 라인시트 | `season-planning.md` |
-| **Design** | 크리에이티브 스튜디오 + 프로덕트 랩 | 무드보드, 디자인, 비주얼, 원가 검증 | `design-development.md` |
-| **Do** | 프로덕트 랩 + 마케팅 쇼룸 | 테크팩, 캠페인, 콘텐츠, 런칭 | `techpack-production.md` + `campaign-content.md` |
-| **Check** | 데이터 인텔리전스 | 매출 분석, 인사이트, 지식 아카이빙 | `analysis-insight.md` |
-| **Act** | 관련 에이전시 | 갭 기반 개선 | `quality-gate.md` |
+| 단계 | 에이전시 | 스킬 |
+|------|---------|------|
+| **Plan** | 전략기획실 | `trend-research` → `brand-strategy` → `md-planning` → `line-sheet` |
+| **Design** | 크리에이티브 스튜디오 + 프로덕트 랩 | `moodboard` → `design-spec` → `visual-generation` + `costing-ve` |
+| **Do** | 프로덕트 랩 + 마케팅 쇼룸 | `techpack` · `qr-process` + `imc-strategy` → `visual-content` → `copywriting` → `social-viral` |
+| **Check** | 데이터 인텔리전스 + QC 본부 | `sales-analysis` → `insight-archiving` + `gap-analysis` → `completion-report` |
+| **Act** | QC 본부 | `pdca-iteration` (Match Rate < 90% 시 자동 루프) |
 
 ## 산출물 저장 규칙
 - 위치: `output/[시즌코드]/[단계]/`
