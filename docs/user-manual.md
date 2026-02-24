@@ -70,11 +70,10 @@ baghdad/
 │   ├── data/                    (2개) sales-analysis, insight-archiving
 │   └── quality/                 (4개) quality-gate, gap-analysis, completion-report, pdca-iteration
 │
-├── output/26SS/                 ← 시즌별 산출물 저장소
-│   ├── plan/
-│   ├── design/
-│   ├── do/
-│   └── check/
+├── output/26SS/                 ← 시즌별 산출물 (프로젝트별 정리)
+│   ├── _season/                 시즌 전체 문서 (plan_trend-brief.md 등)
+│   ├── graphic-tee/             아이템 프로젝트 (design_moodboard.md 등)
+│   └── oversized-hoodie/        아이템 프로젝트
 │
 ├── knowledge/                   ← 시즌을 거듭하며 쌓이는 지식 자산
 │   └── index.md                 전체 색인
@@ -331,32 +330,52 @@ QG4 판정: Match Rate ≥ 90% → 시즌 완료 / < 90% → Act 단계
 ## 8. 산출물 관리
 
 ### 저장 규칙
-- **위치**: `output/[시즌코드]/[PDCA단계]/`
+- **위치**: `output/[시즌코드]/[프로젝트명]/`
+- **파일명**: `[PDCA단계]_[내용].확장자` — 단계가 파일명에 명시됨
 - **시즌코드**: 연도 2자리 + 시즌 (예: `26SS`, `26FW`, `27SS`)
-- **파일명**: 내용을 알 수 있게, 한글 가능
-- **예시**: `output/26SS/plan/trend-brief.md`
+- **`_season/`**: 특정 아이템에 종속되지 않는 시즌 전체 문서
+- **아이템 폴더**: 개별 상품/프로젝트 단위로 자유롭게 생성
+
+```
+output/26SS/
+├── _season/                         ← 시즌 전체 문서
+│   ├── plan_trend-brief.md
+│   ├── plan_brand-strategy.md
+│   ├── plan_line-sheet.xlsx
+│   ├── do_imc-strategy.md
+│   └── check_completion-report.md
+├── graphic-tee/                     ← 아이템 프로젝트
+│   ├── plan_category-brief.md
+│   ├── design_moodboard.md
+│   ├── design_spec.md
+│   ├── do_techpack.md
+│   └── do_pdp-copy.md
+└── oversized-hoodie/
+    ├── design_moodboard.md
+    └── do_techpack.md
+```
 
 ### 산출물 전체 목록 (시즌 1회 기준)
 
-| 단계 | 산출물 | 담당 |
-|------|--------|------|
-| Plan | trend-brief.md | 시장 리서처 |
-| Plan | brand-strategy.md | 브랜드 전략가 |
-| Plan | season-concept.md | 수석 MD |
-| Plan | line-sheet.md | 컬렉션 플래너 |
-| Design | [아이템]-moodboard.md | 크리에이티브 디렉터 |
-| Design | [아이템]-design-spec.md | 패션 디자이너 |
-| Design | [아이템]-visual/ | 아트 디렉터 |
-| Design | [아이템]-costing.md | 프로덕션 매니저 |
-| Do | [상품]-techpack.md | 프로덕션 매니저 |
-| Do | [상품]-campaign-brief.md | 마케팅 디렉터 |
-| Do | [상품]-content-plan.md | 콘텐츠 디렉터 |
-| Do | [상품]-copy-deck.md | 패션 에디터 |
-| Do | social-strategy.md | 소셜 전략 디렉터 |
-| Check | sales-analysis.md | 트렌드 애널리스트 |
-| Check | kpi-dashboard.md | 트렌드 애널리스트 |
-| Check | gap-report.md | 갭 디텍터 |
-| Check | completion-report.md | 리포트 제너레이터 |
+| 파일명 | 저장 위치 | 담당 |
+|--------|----------|------|
+| `plan_trend-brief.md` | _season/ | 시장 리서처 |
+| `plan_brand-strategy.md` | _season/ | 브랜드 전략가 |
+| `plan_md-plan.md` | _season/ | 수석 MD |
+| `plan_line-sheet.xlsx` | _season/ | 컬렉션 플래너 |
+| `design_moodboard.md` | [아이템]/ | 크리에이티브 디렉터 |
+| `design_spec.md` | [아이템]/ | 패션 디자이너 |
+| `design_visual.md` | [아이템]/ | 아트 디렉터 |
+| `design_costing.md` | [아이템]/ | 프로덕션 매니저 |
+| `do_techpack.md` | [아이템]/ | 프로덕션 매니저 |
+| `do_imc-strategy.md` | _season/ | 마케팅 디렉터 |
+| `do_content-plan.md` | _season/ | 콘텐츠 디렉터 |
+| `do_pdp-copy.md` | [아이템]/ | 패션 에디터 |
+| `do_social-strategy.md` | _season/ | 소셜 전략 디렉터 |
+| `check_sales-analysis.md` | _season/ | 트렌드 애널리스트 |
+| `check_kpi-dashboard.md` | _season/ | 트렌드 애널리스트 |
+| `check_gap-report.md` | _season/ | 갭 디텍터 |
+| `check_completion-report.md` | _season/ | 리포트 제너레이터 |
 
 ---
 

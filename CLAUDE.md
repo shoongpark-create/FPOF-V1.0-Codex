@@ -88,9 +88,31 @@
 | `/doc [유형]` | 워드(DOCX) 문서 생성 | `/doc campaign-plan`, `/doc press-release` |
 
 ## 산출물 저장 규칙
-- 위치: `output/[시즌코드]/[단계]/`
-- 예시: `output/26SS/plan/trend-brief.md`
-- 파일명: 한글 가능, 내용을 알 수 있게
+- 위치: `output/[시즌코드]/[프로젝트명]/`
+- 파일명: `[PDCA단계]_[내용].확장자` — 단계가 파일명에 명시됨
+- `_season/` — 특정 아이템에 종속되지 않는 시즌 전체 문서
+- 프로젝트 폴더는 아이템이나 주제 단위로 자유롭게 생성
+
+```
+output/26SS/
+├── _season/                         ← 시즌 전체 문서
+│   ├── plan_trend-brief.md
+│   ├── plan_brand-strategy.md
+│   ├── plan_line-sheet.xlsx
+│   ├── do_imc-strategy.md
+│   ├── check_sales-analysis.md
+│   └── check_completion-report.md
+├── graphic-tee/                     ← 아이템 프로젝트
+│   ├── plan_category-brief.md
+│   ├── design_moodboard.md
+│   ├── design_spec.md
+│   ├── do_techpack.md
+│   └── do_pdp-copy.md
+└── oversized-hoodie/                ← 아이템 프로젝트
+    ├── design_moodboard.md
+    ├── design_spec.md
+    └── do_techpack.md
+```
 
 ## 문서 (docs/)
 - `user-manual.md` — FPOF 사용 매뉴얼 (종합 레퍼런스)
