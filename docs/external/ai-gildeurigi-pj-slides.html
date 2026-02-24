@@ -1,0 +1,335 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AI 길들이기 PJ - 발표용 슬라이드</title>
+  <style>
+    :root {
+      --bg: #0b1220;
+      --panel: #101a2d;
+      --panel-2: #0f1727;
+      --line: #28415f;
+      --text: #f2f6ff;
+      --muted: #9fb2ce;
+      --accent: #ff7a45;
+      --accent-2: #18c3a5;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; }
+    body {
+      font-family: "SUIT Variable", "Pretendard", "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 10% 10%, rgba(255,122,69,0.15), transparent 26%),
+        radial-gradient(circle at 90% 8%, rgba(24,195,165,0.14), transparent 28%),
+        linear-gradient(160deg, #050b16, #0c1424 40%, #091225);
+      overflow: hidden;
+    }
+
+    .shell {
+      height: 100dvh;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      gap: 10px;
+      padding: 12px;
+    }
+
+    .topbar {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      justify-content: space-between;
+      background: linear-gradient(to bottom, rgba(11, 20, 34, 0.95), rgba(11, 20, 34, 0.75));
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 10px 14px;
+    }
+
+    .title {
+      display: grid;
+      gap: 3px;
+    }
+
+    .title h1 {
+      margin: 0;
+      font-size: clamp(14px, 1.5vw, 18px);
+      letter-spacing: -0.02em;
+    }
+
+    .title p {
+      margin: 0;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .chip {
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(197, 215, 241, 0.28);
+      color: #dbe7ff;
+      background: rgba(255,255,255,0.05);
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .viewer-wrap {
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: linear-gradient(170deg, rgba(16, 26, 45, 0.9), rgba(11, 18, 32, 0.9));
+      overflow: hidden;
+      position: relative;
+    }
+
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: 0;
+      background: #0c162a;
+    }
+
+    .controls {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 12px;
+      background: linear-gradient(to top, rgba(11, 20, 34, 0.95), rgba(11, 20, 34, 0.75));
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 10px 12px;
+    }
+
+    .left, .right, .center {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .left { justify-content: flex-start; }
+    .center { justify-content: center; }
+    .right { justify-content: flex-end; }
+
+    button {
+      appearance: none;
+      border: 1px solid rgba(197, 215, 241, 0.35);
+      color: var(--text);
+      background: rgba(255,255,255,0.04);
+      border-radius: 10px;
+      padding: 9px 12px;
+      cursor: pointer;
+      font: inherit;
+      font-size: 13px;
+    }
+
+    button:hover { border-color: #fff; }
+
+    .pagebox {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    input[type="number"] {
+      width: 66px;
+      border: 1px solid rgba(197, 215, 241, 0.35);
+      background: rgba(255,255,255,0.04);
+      color: var(--text);
+      border-radius: 8px;
+      padding: 7px 8px;
+      font: inherit;
+      font-size: 13px;
+      text-align: center;
+    }
+
+    .progress {
+      width: min(460px, 45vw);
+      height: 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(197, 215, 241, 0.3);
+      background: rgba(255,255,255,0.08);
+      overflow: hidden;
+    }
+
+    .progress > span {
+      display: block;
+      height: 100%;
+      width: 0;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+      transition: width 180ms ease;
+    }
+
+    .hint {
+      color: var(--muted);
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .help {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      z-index: 5;
+      background: rgba(10, 17, 28, 0.72);
+      border: 1px solid rgba(197, 215, 241, 0.25);
+      border-radius: 10px;
+      padding: 8px 10px;
+      font-size: 11px;
+      color: #d8e4fa;
+      backdrop-filter: blur(4px);
+    }
+
+    @media (max-width: 800px) {
+      .controls { grid-template-columns: 1fr; gap: 8px; }
+      .left, .center, .right { justify-content: center; flex-wrap: wrap; }
+      .progress { width: min(88vw, 460px); }
+      .hint { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header class="topbar">
+      <div class="title">
+        <h1>AI 길들이기 PJ 발표 슬라이드</h1>
+        <p>PDF 원본을 발표 모드로 재구성한 웹 프레젠터</p>
+      </div>
+      <div class="top-actions">
+        <span class="chip">총 <span id="totalTop">84</span> 페이지</span>
+        <span class="chip">현재 <span id="currentTop">1</span> 페이지</span>
+      </div>
+    </header>
+
+    <section class="viewer-wrap">
+      <div class="help">단축키: ←/→, PgUp/PgDn, Home/End, F</div>
+      <iframe id="pdfFrame" title="AI 길들이기 PJ PDF 슬라이드"></iframe>
+    </section>
+
+    <footer class="controls">
+      <div class="left">
+        <button id="prevBtn" type="button">이전</button>
+        <button id="nextBtn" type="button">다음</button>
+        <button id="firstBtn" type="button">처음</button>
+        <button id="lastBtn" type="button">마지막</button>
+      </div>
+
+      <div class="center">
+        <div class="progress" aria-hidden="true"><span id="bar"></span></div>
+      </div>
+
+      <div class="right">
+        <div class="pagebox">
+          <label for="pageInput">페이지</label>
+          <input id="pageInput" type="number" min="1" step="1" />
+          <span>/ <span id="totalBottom">84</span></span>
+        </div>
+        <button id="goBtn" type="button">이동</button>
+        <button id="fitBtn" type="button">맞춤 전환</button>
+        <button id="fsBtn" type="button">전체화면</button>
+        <span class="hint">Shift+←/→: 5페이지 이동</span>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    const PDF_PATH = "ai-gildeurigi-pj.pdf";
+    const TOTAL_PAGES = 84;
+
+    const frame = document.getElementById("pdfFrame");
+    const bar = document.getElementById("bar");
+    const pageInput = document.getElementById("pageInput");
+    const currentTop = document.getElementById("currentTop");
+    const totalTop = document.getElementById("totalTop");
+    const totalBottom = document.getElementById("totalBottom");
+
+    const prevBtn = document.getElementById("prevBtn");
+    const nextBtn = document.getElementById("nextBtn");
+    const firstBtn = document.getElementById("firstBtn");
+    const lastBtn = document.getElementById("lastBtn");
+    const goBtn = document.getElementById("goBtn");
+    const fitBtn = document.getElementById("fitBtn");
+    const fsBtn = document.getElementById("fsBtn");
+
+    let page = 1;
+    let fitMode = "page-fit";
+
+    totalTop.textContent = String(TOTAL_PAGES);
+    totalBottom.textContent = String(TOTAL_PAGES);
+
+    function clampPage(n) {
+      return Math.max(1, Math.min(TOTAL_PAGES, n));
+    }
+
+    function updateFrame() {
+      const src = `${PDF_PATH}#page=${page}&zoom=${fitMode}&toolbar=0&navpanes=0&scrollbar=0`;
+      frame.src = src;
+      currentTop.textContent = String(page);
+      pageInput.value = String(page);
+      bar.style.width = `${(page / TOTAL_PAGES) * 100}%`;
+      document.title = `AI 길들이기 PJ - ${page}/${TOTAL_PAGES}`;
+    }
+
+    function go(n) {
+      page = clampPage(n);
+      updateFrame();
+    }
+
+    prevBtn.addEventListener("click", () => go(page - 1));
+    nextBtn.addEventListener("click", () => go(page + 1));
+    firstBtn.addEventListener("click", () => go(1));
+    lastBtn.addEventListener("click", () => go(TOTAL_PAGES));
+    goBtn.addEventListener("click", () => go(Number(pageInput.value || page)));
+
+    pageInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") go(Number(pageInput.value || page));
+    });
+
+    fitBtn.addEventListener("click", () => {
+      fitMode = fitMode === "page-fit" ? "page-width" : "page-fit";
+      fitBtn.textContent = fitMode === "page-fit" ? "맞춤 전환" : "너비 전환";
+      updateFrame();
+    });
+
+    fsBtn.addEventListener("click", async () => {
+      if (!document.fullscreenElement) {
+        await document.documentElement.requestFullscreen();
+      } else {
+        await document.exitFullscreen();
+      }
+    });
+
+    window.addEventListener("keydown", (e) => {
+      if (["ArrowRight", "PageDown"].includes(e.key)) {
+        e.preventDefault();
+        go(page + (e.shiftKey ? 5 : 1));
+      }
+      if (["ArrowLeft", "PageUp"].includes(e.key)) {
+        e.preventDefault();
+        go(page - (e.shiftKey ? 5 : 1));
+      }
+      if (e.key === "Home") {
+        e.preventDefault();
+        go(1);
+      }
+      if (e.key === "End") {
+        e.preventDefault();
+        go(TOTAL_PAGES);
+      }
+      if (e.key.toLowerCase() === "f") {
+        e.preventDefault();
+        fsBtn.click();
+      }
+    });
+
+    updateFrame();
+  </script>
+</body>
+</html>

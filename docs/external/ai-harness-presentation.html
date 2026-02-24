@@ -1,0 +1,709 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AI 길들이기 시스템 발표</title>
+  <style>
+    :root {
+      --bg: #08111f;
+      --bg-soft: #0e1b30;
+      --surface: #10213d;
+      --surface-2: #132949;
+      --text: #f2f7ff;
+      --muted: #a9bbd7;
+      --line: #2b4770;
+      --accent: #ff6b4a;
+      --accent-2: #12c9a6;
+      --accent-3: #ffd166;
+      --danger: #ff4d5f;
+      --ok: #2dd4bf;
+      --radius: 20px;
+      --shadow: 0 24px 70px rgba(5, 10, 20, 0.45);
+      --font-display: "S-Core Dream", "SUIT Variable", "Pretendard", "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+      --font-body: "SUIT Variable", "Pretendard", "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html,
+    body {
+      height: 100%;
+      font-family: var(--font-body);
+      color: var(--text);
+      background:
+        radial-gradient(circle at 10% 10%, rgba(255, 107, 74, 0.16), transparent 30%),
+        radial-gradient(circle at 90% 0%, rgba(18, 201, 166, 0.14), transparent 35%),
+        linear-gradient(165deg, #060d19, #0b1629 45%, #0b1731);
+      overflow: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+      background-size: 38px 38px;
+      pointer-events: none;
+      opacity: 0.22;
+      z-index: 0;
+    }
+
+    .topbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 20;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 24px;
+      background: linear-gradient(to bottom, rgba(2, 6, 14, 0.8), rgba(2, 6, 14, 0.15));
+      backdrop-filter: blur(5px);
+      border-bottom: 1px solid rgba(70, 101, 146, 0.3);
+    }
+
+    .brand {
+      font-size: 13px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .progress-wrap {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 190px;
+    }
+
+    .progress {
+      width: 160px;
+      height: 7px;
+      border-radius: 99px;
+      background: rgba(255, 255, 255, 0.15);
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .progress > span {
+      display: block;
+      width: 0;
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent), var(--accent-3));
+      transition: width 240ms ease;
+    }
+
+    .page-index {
+      font-size: 12px;
+      color: var(--muted);
+      min-width: 52px;
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .deck {
+      position: relative;
+      z-index: 1;
+      height: 100dvh;
+      overflow-y: auto;
+      scroll-snap-type: y mandatory;
+      scroll-behavior: smooth;
+      padding-top: 62px;
+    }
+
+    .slide {
+      min-height: calc(100dvh - 62px);
+      scroll-snap-align: start;
+      padding: clamp(26px, 5vw, 72px);
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: clamp(20px, 4vw, 48px);
+      align-items: center;
+      position: relative;
+      isolation: isolate;
+    }
+
+    .slide::after {
+      content: "";
+      position: absolute;
+      inset: 8% 5%;
+      border: 1px solid rgba(120, 160, 220, 0.15);
+      border-radius: 28px;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      gap: 8px;
+      align-items: center;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      color: var(--accent-3);
+      font-weight: 700;
+      margin-bottom: 14px;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 22px;
+      height: 2px;
+      background: var(--accent-3);
+      opacity: 0.8;
+    }
+
+    h1,
+    h2 {
+      font-family: var(--font-display);
+      line-height: 1.06;
+      letter-spacing: -0.025em;
+    }
+
+    h1 {
+      font-size: clamp(42px, 6.2vw, 92px);
+      margin-bottom: 16px;
+      max-width: 12ch;
+    }
+
+    h2 {
+      font-size: clamp(34px, 4.2vw, 62px);
+      margin-bottom: 14px;
+      max-width: 14ch;
+    }
+
+    .lead {
+      color: var(--muted);
+      font-size: clamp(17px, 1.9vw, 24px);
+      line-height: 1.55;
+      max-width: 55ch;
+    }
+
+    .accent {
+      color: var(--accent);
+    }
+
+    .panel {
+      background: linear-gradient(165deg, rgba(19, 38, 66, 0.85), rgba(14, 29, 52, 0.75));
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: clamp(16px, 2.2vw, 28px);
+    }
+
+    .list {
+      display: grid;
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .list li {
+      list-style: none;
+      padding: 14px 14px 14px 16px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(127, 162, 211, 0.2);
+      font-size: clamp(14px, 1.1vw, 18px);
+      line-height: 1.45;
+    }
+
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 16px;
+    }
+
+    .kpi {
+      border-radius: 16px;
+      padding: 16px;
+      background: linear-gradient(160deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.03));
+      border: 1px solid rgba(146, 176, 220, 0.25);
+    }
+
+    .kpi strong {
+      font-size: clamp(26px, 3.1vw, 46px);
+      font-family: var(--font-display);
+      display: block;
+      color: var(--accent-3);
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+
+    .kpi span {
+      color: var(--muted);
+      font-size: clamp(13px, 1vw, 16px);
+      line-height: 1.35;
+    }
+
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .pill {
+      padding: 8px 12px;
+      border-radius: 99px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      border: 1px solid rgba(196, 215, 245, 0.27);
+      background: rgba(255, 255, 255, 0.04);
+      color: #dfeafe;
+    }
+
+    .callout {
+      margin-top: 18px;
+      padding: 16px;
+      border-left: 4px solid var(--accent);
+      background: rgba(255, 107, 74, 0.08);
+      border-radius: 10px;
+      color: #ffe6df;
+      font-size: clamp(15px, 1.1vw, 19px);
+      line-height: 1.55;
+    }
+
+    .flow {
+      display: grid;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .flow-step {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 12px;
+      align-items: center;
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(159, 187, 230, 0.23);
+      background: rgba(255, 255, 255, 0.04);
+      font-size: clamp(13px, 0.95vw, 16px);
+    }
+
+    .flow-step b {
+      width: 30px;
+      height: 30px;
+      display: inline-grid;
+      place-items: center;
+      border-radius: 8px;
+      background: linear-gradient(150deg, rgba(255, 107, 74, 0.95), rgba(255, 209, 102, 0.95));
+      color: #111;
+      font-size: 12px;
+    }
+
+    .full {
+      grid-template-columns: 1fr;
+      align-content: center;
+      text-align: center;
+    }
+
+    .full h2,
+    .full .lead {
+      margin-inline: auto;
+    }
+
+    .timeline {
+      margin-top: 20px;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .timeline .node {
+      padding: 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(127, 162, 211, 0.2);
+      background: rgba(255, 255, 255, 0.04);
+      text-align: left;
+    }
+
+    .timeline .node strong {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--accent-2);
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .timeline .node p {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.35;
+    }
+
+    .nav {
+      position: fixed;
+      right: 16px;
+      bottom: 16px;
+      z-index: 21;
+      display: grid;
+      grid-template-columns: repeat(2, auto);
+      gap: 8px;
+    }
+
+    .nav button {
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      color: var(--text);
+      background: rgba(9, 17, 30, 0.68);
+      backdrop-filter: blur(5px);
+      border-radius: 12px;
+      padding: 10px 14px;
+      font: inherit;
+      cursor: pointer;
+      transition: transform 120ms ease, border-color 120ms ease;
+    }
+
+    .nav button:hover {
+      transform: translateY(-1px);
+      border-color: #fff;
+    }
+
+    .muted {
+      color: var(--muted);
+    }
+
+    @media (max-width: 980px) {
+      .slide {
+        grid-template-columns: 1fr;
+        align-content: center;
+      }
+
+      .kpi-grid,
+      .timeline {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 620px) {
+      .topbar {
+        padding: 12px 14px;
+      }
+
+      .brand {
+        font-size: 11px;
+      }
+
+      .progress-wrap {
+        min-width: auto;
+      }
+
+      .progress {
+        width: 110px;
+      }
+
+      .slide {
+        min-height: calc(100dvh - 56px);
+        padding: 20px 16px 26px;
+      }
+
+      .kpi-grid,
+      .timeline {
+        grid-template-columns: 1fr;
+      }
+
+      .nav {
+        right: 10px;
+        bottom: 10px;
+      }
+
+      .nav button {
+        padding: 8px 11px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">AI HARNESS SYSTEM / PRESENTATION</div>
+    <div class="progress-wrap">
+      <div class="progress"><span id="progressBar"></span></div>
+      <div class="page-index" id="pageIndex">1 / 12</div>
+    </div>
+  </header>
+
+  <main class="deck" id="deck">
+    <section class="slide" data-title="Title">
+      <div>
+        <div class="eyebrow">Fashion House Case</div>
+        <h1>패션 브랜드 하우스가 AI를 <span class="accent">95점짜리</span> 운영 파트너로 만든 방식</h1>
+        <p class="lead">시즌 기획부터 런칭까지 반복된 시행착오 끝에 결론은 명확했습니다. AI 성능은 모델 선택보다 <strong>운영 시스템 설계</strong>에서 갈립니다.</p>
+        <div class="pill-row">
+          <span class="pill">문제: 맥락 상실</span>
+          <span class="pill">문제: 매뉴얼 무시</span>
+          <span class="pill">문제: 자신감 있는 오류</span>
+        </div>
+      </div>
+      <aside class="panel">
+        <div class="eyebrow">핵심 문장</div>
+        <h3 style="font-size: clamp(24px,2.3vw,38px); line-height:1.2; margin-bottom: 12px;">"AI는 그냥 쓰면 50점, 시스템을 주면 95점"</h3>
+        <ul class="list">
+          <li>대상: 브랜드 기획, MD, 디자인, 생산, 마케팅 팀</li>
+          <li>방법: 자동 매뉴얼 + 작업 기억 + 자동 검수 + 역할 분화</li>
+          <li>목표: 시즌 산출물 품질 안정화, 재작업 감소, 실행 속도 향상</li>
+        </ul>
+      </aside>
+    </section>
+
+    <section class="slide" data-title="Problem">
+      <div>
+        <div class="eyebrow">Problem Definition</div>
+        <h2>AI가 똑똑해도, 협업은 <span class="accent">자주 망가진다</span></h2>
+        <p class="lead">개별 결과물은 좋아 보여도, 시즌 단위 협업에서는 기억 손실과 기준 이탈이 반복됩니다. 결과는 "빨리 만들고, 런칭 직전에 다시 뜯어고치는" 패턴입니다.</p>
+        <div class="callout">핵심 리스크: 모델이 아니라 운영 방식이 불안정할 때 품질 편차가 폭발한다.</div>
+      </div>
+      <div class="panel">
+        <ul class="list">
+          <li><strong>기억 손실:</strong> 시즌 컨셉, 타겟, 가격대 기준이 중간에 흐려짐</li>
+          <li><strong>매뉴얼 무시:</strong> 브랜드 톤앤매너, 핏/소재 가이드 미반영</li>
+          <li><strong>검수 누락:</strong> 원가, 납기, 품질 체크 포인트 누락</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="slide" data-title="Impact">
+      <div>
+        <div class="eyebrow">Impact</div>
+        <h2>실제 결과는 <span class="accent">측정 가능</span>해야 한다</h2>
+        <p class="lead">사례에서 중요한 건 분위기가 아니라 수치입니다. 시스템 설계 전후의 리소스, 품질, 재작업 시간을 비교해야 조직에 정착됩니다.</p>
+        <div class="timeline">
+          <div class="node">
+            <strong>Before</strong>
+            <p>매번 다른 방식으로 작업해 품질 변동이 큼</p>
+          </div>
+          <div class="node">
+            <strong>System Build</strong>
+            <p>2일 집중 셋업으로 시즌 운영 규칙 자동화</p>
+          </div>
+          <div class="node">
+            <strong>After</strong>
+            <p>수정 루프 감소, 결과물 일관성 상승</p>
+          </div>
+          <div class="node">
+            <strong>Scale</strong>
+            <p>장기 작업에서도 계획/맥락 보존</p>
+          </div>
+        </div>
+      </div>
+      <aside class="panel">
+        <div class="eyebrow">KPI</div>
+        <div class="kpi-grid">
+          <article class="kpi">
+            <strong>300~400 룩</strong>
+            <span>시즌 기획/스타일링/콘텐츠 파생 산출물 규모</span>
+          </article>
+          <article class="kpi">
+            <strong>40~60%</strong>
+            <span>매뉴얼 소비 리소스 절감</span>
+          </article>
+          <article class="kpi">
+            <strong>10x+</strong>
+            <span>2일 셋업 투자 대비 회수 효과</span>
+          </article>
+        </div>
+      </aside>
+    </section>
+
+    <section class="slide" data-title="System 1">
+      <div>
+        <div class="eyebrow">System 1</div>
+        <h2>자동 매뉴얼: <span class="accent">읽게 만들면</span> 시즌 품질이 고정된다</h2>
+        <p class="lead">문서를 "만들기"보다, 작업 시점에 "강제로 호출"하는 설계가 핵심입니다. 시즌 기획, 디자인, 상세페이지 작성 시점에 기준을 자동 주입합니다.</p>
+      </div>
+      <aside class="panel">
+        <ul class="list">
+          <li><strong>시작 전 알림:</strong> 작업 의도 분석 후 디자인/MD/카피 매뉴얼 자동 호출</li>
+          <li><strong>완료 후 체크:</strong> 원가/납기/품질/브랜드 톤 누락 여부 자동 상기</li>
+          <li><strong>매칭 규칙:</strong> 키워드, 의도, 카테고리, 파일 패턴 4축 판정</li>
+          <li><strong>최적화:</strong> 긴 단일 가이드 → 목차 + 역할별 챕터 분리</li>
+        </ul>
+      </aside>
+    </section>
+
+    <section class="slide" data-title="System 2">
+      <div>
+        <div class="eyebrow">System 2</div>
+        <h2>작업 기억: <span class="accent">계획을 외부 저장</span>해 시즌 맥락을 지킨다</h2>
+        <p class="lead">시즌 운영 실패의 핵심 원인은 모델 지능 부족보다 상태 관리 실패입니다. AI 메모리에 의존하지 말고, 시즌 상태를 문서로 강제 고정해야 합니다.</p>
+      </div>
+      <aside class="panel">
+        <div class="flow">
+          <div class="flow-step"><b>1</b><span>AI가 시즌 플랜 초안 작성</span></div>
+          <div class="flow-step"><b>2</b><span>브랜드팀이 플랜 검토/수정</span></div>
+          <div class="flow-step"><b>3</b><span>라인시트·맥락노트·체크리스트 저장</span></div>
+          <div class="flow-step"><b>4</b><span>작업은 카테고리 단위로 분할 실행</span></div>
+          <div class="flow-step"><b>5</b><span>체크리스트를 매 단계 갱신</span></div>
+        </div>
+      </aside>
+    </section>
+
+    <section class="slide" data-title="System 3">
+      <div>
+        <div class="eyebrow">System 3</div>
+        <h2>자동 품질 검사: <span class="accent">완료 시점</span>에 한 번에 검증</h2>
+        <p class="lead">중간 산출물은 불안정합니다. 검사는 스타일 확정/런칭 직전 시점에 집중하고, 기록 기반으로 오류를 분류해 즉시 수정 루프를 태웁니다.</p>
+      </div>
+      <aside class="panel">
+        <ul class="list">
+          <li><strong>수정 기록:</strong> 누가, 언제, SKU/카피/소재 정보를 바꿨는지 자동 로그</li>
+          <li><strong>완료 후 검사:</strong> 룩/상세페이지 확정 시 자동 품질 스캔</li>
+          <li><strong>오류 분기:</strong> 경미 오류는 즉시 수정, 중대 오류는 QC 담당으로 라우팅</li>
+          <li><strong>셀프 체크:</strong> 원가·납기·컴플라이언스·톤앤매너 재점검 리마인더</li>
+        </ul>
+      </aside>
+    </section>
+
+    <section class="slide" data-title="System 4">
+      <div>
+        <div class="eyebrow">System 4</div>
+        <h2>전문 AI 팀원: <span class="accent">역할 분화</span>가 시즌 완성도를 만든다</h2>
+        <p class="lead">한 모델에 만능을 기대하면 책임 경계가 흐려집니다. 역할별 에이전트를 배치하고, 보고 형식을 고정하면 검토 품질이 급상승합니다.</p>
+      </div>
+      <aside class="panel">
+        <ul class="list">
+          <li>MD 에이전트: SKU/가격/채널 전략 정합성 검토</li>
+          <li>디자인 에이전트: 무드/실루엣/스타일 방향 제안</li>
+          <li>QC 에이전트: 누락/리스크/일관성 검증</li>
+          <li>필수 보고 형식: "무엇을 발견, 무엇을 수정, 왜 판단"</li>
+        </ul>
+      </aside>
+    </section>
+
+    <section class="slide" data-title="Pipeline">
+      <div>
+        <div class="eyebrow">Integrated Pipeline</div>
+        <h2>시즌 운영 파이프라인은 <span class="accent">자동 흐름</span>으로 설계한다</h2>
+        <p class="lead">핵심은 단일 프롬프트가 아니라 시스템 레벨의 흐름 제어입니다. 아래 순서를 고정하면 팀 내 재현성이 확보됩니다.</p>
+      </div>
+      <aside class="panel">
+        <div class="flow">
+          <div class="flow-step"><b>1</b><span>시즌 목표 입력</span></div>
+          <div class="flow-step"><b>2</b><span>역할별 매뉴얼 자동 호출</span></div>
+          <div class="flow-step"><b>3</b><span>라인시트/디자인/카피 생성 + 기록</span></div>
+          <div class="flow-step"><b>4</b><span>완료 후 자동 검사</span></div>
+          <div class="flow-step"><b>5</b><span>셀프 체크 + 수정 반영</span></div>
+          <div class="flow-step"><b>6</b><span>머천다이징 승인 및 런칭 확정</span></div>
+        </div>
+      </aside>
+    </section>
+
+    <section class="slide" data-title="Playbook">
+      <div>
+        <div class="eyebrow">Execution Playbook</div>
+        <h2>패션 하우스에 바로 적용할 <span class="accent">실행 체크리스트</span></h2>
+        <p class="lead">아래 6개만 적용해도 체감 품질이 올라갑니다. 핵심은 완벽한 자동화보다 "누락 방지"를 먼저 달성하는 것입니다.</p>
+      </div>
+      <aside class="panel">
+        <ul class="list">
+          <li>디자인/MD/마케팅 매뉴얼을 역할별로 분리 작성</li>
+          <li>시즌 작업 시작 전에 해당 매뉴얼 자동 소환</li>
+          <li>라인시트/맥락노트/체크리스트 3문서 강제</li>
+          <li>작업 단위를 카테고리 단위로 제한하고 단계 승인</li>
+          <li>완료 선언 후 자동 검사 + 셀프체크 질문</li>
+          <li>역할별 AI 팀원으로 리뷰 경계 분리</li>
+        </ul>
+      </aside>
+    </section>
+
+    <section class="slide full" data-title="Conclusion">
+      <div>
+        <div class="eyebrow" style="justify-content:center;">Conclusion</div>
+        <h2>도구가 아니라 <span class="accent">운영체계</span>가 성과를 만든다</h2>
+        <p class="lead">ChatGPT, Claude, Gemini 어떤 모델을 써도 원리는 같습니다. AI의 한계를 탓하기 전에 하니스 시스템을 설계하면, 시즌 운영 성능은 구조적으로 개선됩니다.</p>
+        <div class="kpi-grid" style="margin-top: 26px; max-width: 880px; margin-inline:auto;">
+          <article class="kpi"><strong>50 → 95</strong><span>AI 성능 체감치</span></article>
+          <article class="kpi"><strong>재현 가능</strong><span>개인 의존 → 팀 표준화</span></article>
+          <article class="kpi"><strong>낮은 리스크</strong><span>누락/오류/보안 이슈 사전 차단</span></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide full" data-title="Q&A">
+      <div>
+        <div class="eyebrow" style="justify-content:center;">Q&A</div>
+        <h2>우리 브랜드 하우스에 맞는 운영 설계를<br><span class="accent">지금부터 구체화</span>합니다</h2>
+        <p class="lead muted">다음 액션: 1주 파일럿(예: 우먼스 용품) 범위를 정하고, 자동 매뉴얼/검사 규칙부터 최소 단위로 도입</p>
+      </div>
+    </section>
+  </main>
+
+  <div class="nav" aria-label="슬라이드 네비게이션">
+    <button id="prevBtn" type="button">이전</button>
+    <button id="nextBtn" type="button">다음</button>
+  </div>
+
+  <script>
+    const deck = document.getElementById('deck');
+    const slides = Array.from(deck.querySelectorAll('.slide'));
+    const progressBar = document.getElementById('progressBar');
+    const pageIndex = document.getElementById('pageIndex');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+
+    let activeIndex = 0;
+
+    const toSlide = (index) => {
+      const clamped = Math.max(0, Math.min(index, slides.length - 1));
+      slides[clamped].scrollIntoView({ behavior: 'smooth', block: 'start' });
+    };
+
+    const sync = () => {
+      const midpoint = deck.scrollTop + (deck.clientHeight * 0.5);
+      let index = 0;
+
+      for (let i = 0; i < slides.length; i += 1) {
+        const top = slides[i].offsetTop;
+        const bottom = top + slides[i].offsetHeight;
+        if (midpoint >= top && midpoint < bottom) {
+          index = i;
+          break;
+        }
+      }
+
+      activeIndex = index;
+      const percent = ((activeIndex + 1) / slides.length) * 100;
+      progressBar.style.width = `${percent}%`;
+      pageIndex.textContent = `${activeIndex + 1} / ${slides.length}`;
+    };
+
+    prevBtn.addEventListener('click', () => toSlide(activeIndex - 1));
+    nextBtn.addEventListener('click', () => toSlide(activeIndex + 1));
+
+    window.addEventListener('keydown', (event) => {
+      const key = event.key;
+      if (['ArrowDown', 'PageDown', 'ArrowRight', ' '].includes(key)) {
+        event.preventDefault();
+        toSlide(activeIndex + 1);
+      }
+      if (['ArrowUp', 'PageUp', 'ArrowLeft'].includes(key)) {
+        event.preventDefault();
+        toSlide(activeIndex - 1);
+      }
+      if (key === 'Home') {
+        event.preventDefault();
+        toSlide(0);
+      }
+      if (key === 'End') {
+        event.preventDefault();
+        toSlide(slides.length - 1);
+      }
+    });
+
+    deck.addEventListener('scroll', sync, { passive: true });
+    window.addEventListener('resize', sync);
+    sync();
+  </script>
+</body>
+</html>

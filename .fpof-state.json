@@ -1,0 +1,34 @@
+{
+  "framework": {
+    "name": "FPOF",
+    "version": "1.0.0",
+    "initialized_at": "2026-02-23T00:00:00Z"
+  },
+  "active_brand": "wacky-willy",
+  "active_brand_path": "presets/wacky-willy/",
+  "current_season": "26SS",
+  "pdca": {
+    "current_phase": "plan",
+    "cycle_count": 1,
+    "phases": {
+      "plan": { "status": "not_started", "completion_pct": 0, "artifacts": [] },
+      "design": { "status": "not_started", "completion_pct": 0, "artifacts": [] },
+      "do": { "status": "not_started", "completion_pct": 0, "artifacts": [] },
+      "check": { "status": "not_started", "completion_pct": 0, "artifacts": [] },
+      "act": { "status": "not_started", "completion_pct": 0, "artifacts": [] }
+    },
+    "quality_gates": {
+      "QG1": { "status": "pending", "result": null },
+      "QG2": { "status": "pending", "result": null },
+      "QG3": { "status": "pending", "result": null },
+      "QG4": { "status": "pending", "result": null }
+    }
+  },
+  "work_memory": {
+    "current_plan": null,
+    "context_notes": [],
+    "todo": [],
+    "decisions_log": []
+  },
+  "history": []
+}
