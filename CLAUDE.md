@@ -71,17 +71,36 @@
 | **Check** | 데이터 인텔리전스 + QC 본부 | `sales-analysis` → `insight-archiving` + `gap-analysis` → `completion-report` |
 | **Act** | QC 본부 | `pdca-iteration` (Match Rate < 90% 시 자동 루프) |
 
+## 슬래시 명령어 (.claude/commands/)
+패션 하우스 전용 단축 명령어입니다. `/명령어`로 실행합니다.
+
+| 명령어 | 기능 | 사용 예 |
+|--------|------|---------|
+| `/status` | 현재 시즌·PDCA 단계·산출물 현황 확인 | "지금 어디까지 진행됐어?" |
+| `/brief [유형]` | 산출물 템플릿 기반 문서 작성 | `/brief trend-brief`, `/brief moodboard` |
+| `/review` | 현재 단계 Quality Gate 검수 실행 | "검수해줘" |
+| `/next` | 다음 PDCA 단계 전환 (QG 포함) | "다음 단계로 넘어가자" |
+| `/team` | 6개 에이전시 20명 팀 현황 조회 | "누가 뭘 담당해?" |
+| `/export [detail]` | 시즌 산출물 목록 정리·요약 | "지금까지 만든 거 정리해줘" |
+| `/deck [유형]` | 프레젠테이션(PPTX) 생성 | `/deck trend`, `/deck lookbook` |
+| `/pdf [유형]` | PDF 보고서 생성 | `/pdf season-book`, `/pdf techpack` |
+| `/sheet [유형]` | 엑셀(XLSX) 시트 생성 | `/sheet line-sheet`, `/sheet otb` |
+| `/doc [유형]` | 워드(DOCX) 문서 생성 | `/doc campaign-plan`, `/doc press-release` |
+
 ## 산출물 저장 규칙
 - 위치: `output/[시즌코드]/[단계]/`
 - 예시: `output/26SS/plan/trend-brief.md`
 - 파일명: 한글 가능, 내용을 알 수 있게
 
-## 참고자료 (docs/)
-- `(참고자료) Fashion_PDCA_Orchestration_Framework.md` — 전체 시스템 아키텍처
-- `(참고자료) 와키윌리(Wacky Willy) 브랜드 전략 보고서.md` — 브랜드 전략 원문
-- `(참고자료) 와키윌리_IP_바이블.md` — IP 캐릭터 세계관 원문
-- `(참고자료) 와키윌리 코어타겟.md` — 코어 타겟 정의 원문
-- `(참고자료) 와키윌리 사업부 경영목표.md` — 5대 경영목표 원문
+## 문서 (docs/)
+- `user-manual.md` — FPOF 사용 매뉴얼 (종합 레퍼런스)
+- `quickstart-guide.md` — 퀵스타트 가이드 (5분 온보딩)
+- `reference/fpof-architecture.md` — 전체 시스템 아키텍처
+- `reference/brand-strategy.md` — 브랜드 전략 원문
+- `reference/ip-bible.md` — IP 캐릭터 세계관 원문
+- `reference/core-target.md` — 코어 타겟 정의 원문
+- `reference/business-goals.md` — 5대 경영목표 원문
+- `external/` — 외부 참고 자료 (AI 방법론 등)
 
 ## 5대 경영목표 (2026)
 1. 브랜드 아이덴티티 정립 — 코어타겟 매출 비중, 인지도/선호도
