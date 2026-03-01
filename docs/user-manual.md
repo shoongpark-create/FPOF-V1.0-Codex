@@ -27,7 +27,7 @@ FPOF(Fashion PDCA Orchestration Framework)는 패션 브랜드 **와키윌리(Wa
 ## 2. 폴더 구조
 
 ```
-baghdad/
+conductor-playground/
 ├── .claude/                     ← Claude Code 설정
 │   ├── hooks.json               훅 설정 (자동 라우팅 + 체크)
 │   ├── hooks/
@@ -68,7 +68,11 @@ baghdad/
 │   ├── product/                 (3개) techpack, costing-ve, qr-process
 │   ├── marketing/               (4개) imc-strategy, visual-content, copywriting, social-viral
 │   ├── data/                    (2개) sales-analysis, insight-archiving
-│   └── quality/                 (4개) quality-gate, gap-analysis, completion-report, pdca-iteration
+│   ├── quality/                 (4개) quality-gate, gap-analysis, completion-report, pdca-iteration
+│   └── task/                    (1개) format-conversion (온디맨드 유틸리티)
+│
+├── task-agents/                 ← PDCA와 분리된 수동 호출형 도구 에이전트
+│   └── format-converter/        문서 포맷 변환기 (pptx/pdf/xlsx/docx)
 │
 ├── output/26SS/                 ← 시즌별 산출물 (프로젝트별 정리)
 │   ├── _season/                 시즌 전체 문서 (plan_trend-brief.md 등)
@@ -81,6 +85,7 @@ baghdad/
 └── docs/                        ← 문서
     ├── user-manual.md           사용 매뉴얼
     ├── quickstart-guide.md      퀵스타트 가이드
+    ├── codex-compat-guide.md    Codex 호환 실행 가이드
     ├── reference/               참고자료 (브랜드 전략, IP 바이블 등)
     └── external/                외부 참고 자료
 ```

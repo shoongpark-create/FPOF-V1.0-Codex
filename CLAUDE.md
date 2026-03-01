@@ -87,6 +87,25 @@
 | `/sheet [유형]` | 엑셀(XLSX) 시트 생성 | `/sheet line-sheet`, `/sheet otb` |
 | `/doc [유형]` | 워드(DOCX) 문서 생성 | `/doc campaign-plan`, `/doc press-release` |
 
+## Codex 호환 실행 (scripts/)
+Claude 전용 훅/슬래시 명령은 유지하되, Codex에서는 아래 스크립트로 동일 흐름을 수동 실행합니다.
+
+- `make status` → 현재 시즌/단계/산출물 상태 요약
+- `make sync-state` → `output/` 기준으로 `.fpof-state.json` 동기화
+- `make route-skill PROMPT="요청문"` → 키워드 라우팅 결과 확인
+- `make check-output INPUT="output/26SS/_season/plan_x.md"` → 산출물 체크리스트 확인
+
+## 온디맨드 태스크 에이전트 (PDCA 분리)
+아래 에이전트는 시즌 PDCA/브랜드 라우팅과 분리된 유틸리티 도구입니다.
+
+- `format-converter` (문서 포맷 변환)
+  - skill: `skills/task/format-conversion.md`
+  - entrypoint: `scripts/task-agent.sh format-converter`
+  - manual-only: 자동 라우팅 훅(`route-skill.sh`)에 연결하지 않음
+  - 예시:
+    - `make convert IN=input.docx OUT=output.pdf`
+    - `./scripts/task-agent.sh format-converter --in input.pptx --out output.pdf`
+
 ## 산출물 저장 규칙
 - 위치: `output/[시즌코드]/[프로젝트명]/`
 - 파일명: `[PDCA단계]_[내용].확장자` — 단계가 파일명에 명시됨
@@ -117,6 +136,8 @@ output/26SS/
 ## 문서 (docs/)
 - `user-manual.md` — FPOF 사용 매뉴얼 (종합 레퍼런스)
 - `quickstart-guide.md` — 퀵스타트 가이드 (5분 온보딩)
+- `codex-compat-guide.md` — Codex 호환 실행 가이드
+- `task-agents/format-converter/README.md` — 온디맨드 문서 변환 에이전트
 - `reference/fpof-architecture.md` — 전체 시스템 아키텍처
 - `reference/brand-strategy.md` — 브랜드 전략 원문
 - `reference/ip-bible.md` — IP 캐릭터 세계관 원문
